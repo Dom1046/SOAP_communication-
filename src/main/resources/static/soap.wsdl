@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/"
+             name="SoapService">
+
+    <!-- 데이터 타입 정의 -->
+    <types>
+        <xsd:schema targetNamespace="http://example.com/">
+            <xsd:element name="Request">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Response">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="Message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <!-- 메시지 정의 -->
+    <message name="RequestMessage">
+        <part name="parameters" element="tns:Request"/>
+    </message>
+    <message name="ResponseMessage">
+        <part name="parameters" element="tns:Response"/>
+    </message>
+
+    <!-- 포트 타입 정의 -->
+    <portType name="SoapPort">
+        <operation name="sendMessage">
+            <input message="tns:RequestMessage"/>
+            <output message="tns:ResponseMessage"/>
+        </operation>
+    </portType>
+
+    <!-- 바인딩 정의 -->
+    <binding name="SoapBinding" type="tns:SoapPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="sendMessage">
+            <soap:operation soapAction="http://example.com/sendMessage"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- 서비스 정의 -->
+    <service name="SoapService">
+        <port name="SoapPort" binding="tns:SoapBinding">
+            <soap:address location="http://192.168.35.206:8080/soap"/>
+        </port>
+    </service>
+
+</definitions>
